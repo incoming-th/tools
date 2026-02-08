@@ -20,4 +20,6 @@ else
     echo "Skipping password change."
 fi
 
-echo "Setup completed. Connect via RDP to $(hostname -I | awk '{print $1}')"
+XRDP_PORT=$(grep "^port=" /etc/xrdp/xrdp.ini | cut -d'=' -f2 || echo "3389")
+
+echo "Setup completed. XRDP Service is running on port $XRDP_PORT"
