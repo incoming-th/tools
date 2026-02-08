@@ -20,6 +20,8 @@ else
     echo "Skipping password change."
 fi
 
-XRDP_PORT=$(grep -m1 "^port=" /etc/xrdp/xrdp.ini 2>/dev/null | cut -d'=' -f2)
+sudo systemctl status xrdp
 
-echo "Setup completed. XRDP Service is running on port $XRDP_PORT"
+echo "================"
+echo "Setup completed."
+echo "================"
