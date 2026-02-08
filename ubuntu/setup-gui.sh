@@ -13,16 +13,11 @@ chmod 600 ~/.xsession
 sudo systemctl enable xrdp
 sudo systemctl restart xrdp
 
-# Prompt for password change
-echo "========================================"
-read -p "Do you want to change the Ubuntu user password? (Y/n): " change_pwd < /dev/tty
+# Call password change script from GitHub
+curl -sSL https://raw.githubusercontent.com/incoming-th/tools/main/ubuntu/change-password.sh | bash
 
-if [[ ! "$change_pwd" =~ ^[Nn]$ ]]; then
-    sudo passwd ubuntu < /dev/tty
-else
-    echo "Skipping password change."
-fi
-echo "========================================"
+# Call Tailscale setup script from GitHub
+curl -sSL https://raw.githubusercontent.com/incoming-th/tools/main/ubuntu/setup-tailscale.sh | bash
 
 # Show status of xrdp
 sudo systemctl status xrdp
