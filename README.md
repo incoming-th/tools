@@ -14,7 +14,7 @@ curl -sSL https://raw.githubusercontent.com/incoming-th/tools/main/ubuntu/change
 
 ### qBittorrent Installation
 
-Setup qBittorrent on a fresh Ubuntu installation.
+Install qBittorrent on a fresh Ubuntu installation.
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/incoming-th/tools/main/ubuntu/install-qbitorrent.sh | bash
@@ -22,7 +22,7 @@ curl -sSL https://raw.githubusercontent.com/incoming-th/tools/main/ubuntu/instal
 
 ### Tailscale Installation
 
-Setup Tailscale on a fresh Ubuntu installation.
+Install Tailscale on a fresh Ubuntu installation.
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/incoming-th/tools/main/ubuntu/install-tailscale.sh | bash
