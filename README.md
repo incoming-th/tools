@@ -1,2 +1,2 @@
-# tools
+# Tools
 Repository for script automation
