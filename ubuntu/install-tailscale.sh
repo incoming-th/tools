@@ -5,13 +5,13 @@ echo "Tailscale Installation"
 echo "========================================"
 read -sp "Enter your Tailscale auth key (or press Enter to skip): " auth_key  < /dev/tty
 echo ""  # Newline after hidden input
-read -p "Enable Tailscale SSH? (y/N): " enable_ssh < /dev/tty
+read -p "Enable Tailscale SSH (you will lose SSH access if you do)? (y/N): " enable_ssh < /dev/tty
 read -p "Advertise this machine as an exit node? (y/N): " enable_exit < /dev/tty
 
 TS_FLAGS=""
 
 if [[ "$enable_ssh" =~ ^[Yy]$ ]]; then
-    TS_FLAGS="$TS_FLAGS --ssh"
+    TS_FLAGS="$TS_FLAGS --ssh --accept-risk=lose-ssh"
 fi
 
 if [[ "$enable_exit" =~ ^[Yy]$ ]]; then
