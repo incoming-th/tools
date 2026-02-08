@@ -17,7 +17,7 @@ sudo systemctl restart xrdp
 curl -sSL https://raw.githubusercontent.com/incoming-th/tools/main/ubuntu/change-password.sh | bash
 
 # Call Tailscale setup script from GitHub
-curl -sSL https://raw.githubusercontent.com/incoming-th/tools/main/ubuntu/setup-tailscale.sh | bash
+curl -sSL https://raw.githubusercontent.com/incoming-th/tools/main/ubuntu/install-tailscale.sh | bash
 
 # Show status of xrdp
 sudo systemctl status xrdp
