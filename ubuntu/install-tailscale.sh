@@ -1,20 +1,27 @@
 #!/bin/bash
 
+set -e
+
 echo "========================================"
 echo "Tailscale Installation"
 echo "========================================"
+
 read -sp "Enter your Tailscale auth key (or press Enter to skip): " auth_key  < /dev/tty
-echo ""  # Newline after hidden input
+echo # Newline after hidden input
 read -p "Enable Tailscale SSH (you will lose SSH access if you do)? (y/N): " enable_ssh < /dev/tty
+enable_ssh="${enable_ssh:-N}"
+enable_ssh="${enable_ssh^^}"
 read -p "Advertise this machine as an exit node? (y/N): " enable_exit < /dev/tty
+enable_exit="${enable_exit:-N}"
+enable_exit="${enable_exit^^}"
 
 TS_FLAGS=""
 
-if [[ "$enable_ssh" =~ ^[Yy]$ ]]; then
+if [[ "$enable_ssh" == 'Y' ]]; then
     TS_FLAGS="$TS_FLAGS --ssh --accept-risk=lose-ssh"
 fi
 
-if [[ "$enable_exit" =~ ^[Yy]$ ]]; then
+if [[ "$enable_exit" == 'Y' ]]; then
     TS_FLAGS="$TS_FLAGS --advertise-exit-node"
 
     if [ -d /etc/sysctl.d ]; then
@@ -38,7 +45,6 @@ fi
 if [ -n "$auth_key" ]; then
     curl -fsSL https://tailscale.com/install.sh | sh
     sudo tailscale up --auth-key="$auth_key" $TS_FLAGS
-
 # No auth key: update existing config
 else
     if [ -z "$TS_FLAGS" ]; then
@@ -47,3 +53,7 @@ else
         sudo tailscale set $TS_FLAGS
     fi
 fi
+
+echo "========================================"
+echo "End of Tailscale Installation"
+echo "========================================"
