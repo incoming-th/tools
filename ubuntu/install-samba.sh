@@ -3,7 +3,7 @@
 set -e
 
 SMB_CONF="/etc/samba/smb.conf"
-TMP_CONF="$(sudo mktemp)"
+TMP_CONF="$(mktemp)"
 CURRENT_USER="${SUDO_USER:-$USER}"
 USER_HOME="$(eval echo "~$CURRENT_USER")"
 TAILSCALE_CONFIG=""
@@ -113,7 +113,7 @@ EOF
 )
 
 # Write config in temp file
-sudo echo "$NEW_SMB_CONF" > "$TMP_CONF"
+echo "$NEW_SMB_CONF" > "$TMP_CONF"
 
 # Validate temp config
 if ! sudo testparm -s "$TMP_CONF" >/dev/null 2>&1; then
