@@ -5,13 +5,14 @@ set -e
 SMB_CONF="/etc/samba/smb.conf"
 TMP_CONF="$(mktemp)"
 CURRENT_USER="${SUDO_USER:-$USER}"
-USER_HOME="$(eval echo "~$CURRENT_USER")"
+USER_HOME="$(getent passwd "$CURRENT_USER" | awk -F: '{print $6}')"
 TAILSCALE_CONFIG=""
 
 echo "========================================"
 echo "Samba Installation"
 echo "========================================"
-
+read -p "Samba username (default: samba): " smb_username < /dev/tty
+smb_username="${smb_username:-samba}"
 # Ask for password
 while true; do
     read -rsp "Samba password (cannot be empty): " smb_password < /dev/tty
@@ -65,6 +66,8 @@ while true; do
     # Create folder (safe if exists)
     share_folder="$USER_HOME/$share_folder"
     mkdir -p "$share_folder"
+    sudo chown -R "$CURRENT_USER":"$CURRENT_USER" "$share_folder"
+    chmod 755 "$share_folder"
 
     break
 done
@@ -79,14 +82,18 @@ if ! command -v smbd >/dev/null 2>&1; then
     sudo apt install -y samba
 fi
 
+# Create Samba user if not available
+if ! id "$smb_username" >/dev/null 2>&1; then
+    sudo useradd -M -s /usr/sbin/nologin "$smb_username"
+fi
+
 # Set Samba password (always update)
-echo -e "$smb_password\n$smb_password" | sudo smbpasswd -s -a "$CURRENT_USER"
+printf '%s\n%s\n' "$smb_password" "$smb_password" | sudo smbpasswd -s -a "$smb_username"
+sudo smbpasswd -e "$smb_username"
 
 # Build optional Tailscale restriction
 if [[ "$enable_tailscale" == "Y" ]]; then
-    TAILSCALE_CONFIG="
-   interfaces = lo tailscale0
-   bind interfaces only = yes
+    TAILSCALE_CONFIG="bind interfaces only = no
    hosts allow = 100.64.0.0/10 127.0.0.1
    hosts deny = 0.0.0.0/0"
 fi
@@ -101,12 +108,14 @@ NEW_SMB_CONF=$(cat <<EOF
    map to guest = bad user
    $TAILSCALE_CONFIG
 
-[$CURRENT_USER]
+[$smb_username]
    path = $share_folder
    browseable = yes
    writable = yes
    read only = no
-   valid users = $CURRENT_USER
+   valid users = $smb_username
+   force user = $CURRENT_USER
+   force group = $CURRENT_USER
    create mask = 0755
    directory mask = 0755
 EOF
