@@ -38,6 +38,12 @@ Install Samba on an Ubuntu server (Tailscale supported).
 curl -sSL https://raw.githubusercontent.com/incoming-th/tools/main/ubuntu/install-samba.sh | bash
 ```
 
+If Windows complains about existing login, run:
+
+```bash
+net use * /delete
+```
+
 ### Tailscale Installation
 
 Install Tailscale on an Ubuntu server.
