@@ -113,7 +113,7 @@ EOF
 )
 
 # Write config in temp file
-echo "$NEW_SMB_CONF" > "$TMP_CONF"
+sudo echo "$NEW_SMB_CONF" > "$TMP_CONF"
 
 # Validate temp config
 if ! sudo testparm -s "$TMP_CONF" >/dev/null 2>&1; then
